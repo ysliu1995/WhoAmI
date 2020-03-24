@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "948178903331",
+    "firebase_url": "https://whoami-eb05e.firebaseio.com",
+    "project_id": "whoami-eb05e",
+    "storage_bucket": "whoami-eb05e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948178903331:android:97656cb6e36be1cdfbec96",
+        "android_client_info": {
+          "package_name": "com.ncbci.whoami"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "948178903331-js82k88s2j2u36m42rpn451runqi8g8m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ncbci.whoami",
+            "certificate_hash": "77b9518157a9f2fbed527990d9d2786cfb3f3667"
+          }
+        },
+        {
+          "client_id": "948178903331-tt6p0kjig31jrv2244euvr7i8snmj161.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYh2OwShCN03ak-hUR5LUJV4kwmhmwfp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "948178903331-tt6p0kjig31jrv2244euvr7i8snmj161.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
