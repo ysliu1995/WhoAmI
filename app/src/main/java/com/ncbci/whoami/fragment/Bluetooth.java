@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.inputmethodservice.ExtractEditText;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -38,8 +36,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.ncbci.whoami.CustomDialog;
-import com.ncbci.whoami.MainActivity;
 import com.ncbci.whoami.R;
 import com.ncbci.whoami.service.BluetoothChatService;
 import com.ncbci.whoami.service.Constants;
@@ -51,7 +47,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class Bluetooth extends Fragment {
     private View v;

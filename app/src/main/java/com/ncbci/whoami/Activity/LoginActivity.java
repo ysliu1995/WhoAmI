@@ -1,4 +1,4 @@
-package com.ncbci.whoami;
+package com.ncbci.whoami.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.ncbci.whoami.service.FCMService;
+import com.ncbci.whoami.R;
+import com.ncbci.whoami.dialog.ProgressDialog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,9 +71,11 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "密碼未填寫", Toast.LENGTH_SHORT).show();
         }
         if((!email.equals("")) && (!password.equals(""))){
+            ProgressDialog.showProgressDialog(LoginActivity.this);
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        ProgressDialog.dismiss();
                         if(task.isSuccessful()){
                             Toast.makeText(LoginActivity.this, "登入成功!!!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));

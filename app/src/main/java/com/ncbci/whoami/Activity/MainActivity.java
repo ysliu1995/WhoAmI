@@ -1,16 +1,23 @@
-package com.ncbci.whoami;
+package com.ncbci.whoami.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import com.ncbci.whoami.Adapter.BottomAdapter;
+import com.ncbci.whoami.R;
 import com.ncbci.whoami.dialog.ThresholdDialog;
 import com.ncbci.whoami.fragment.Bluetooth;
 import com.ncbci.whoami.fragment.Home;
@@ -22,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
     private BottomNavigationView mBv;
     private ViewPager mVp;
+    private DrawerLayout drawerLayout;
 
 
     @Override
@@ -30,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.nav_menu);
+        getSupportActionBar().setTitle("");
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -38,7 +48,30 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        drawerLayout = findViewById(R.id.drawerLayout);
+        NavigationView navigation_view = findViewById(R.id.navigation_view);
+        // 將drawerLayout和toolbar整合，會出現「三」按鈕
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
+        navigation_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                int id = menuItem.getItemId();
+                if (id == R.id.action_ble_setting) {
+                    Toast.makeText(MainActivity.this, "裝置設定", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                else if (id == R.id.action_threshold) {
+                    Toast.makeText(MainActivity.this, "閥值設定", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
         initView();
     }
 
@@ -97,5 +130,9 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new Stream());
         adapter.addFragment(new Bluetooth());
         viewPager.setAdapter(adapter);
+    }
+
+    public void setActionBarColor(int color) {
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
     }
 }

@@ -1,4 +1,4 @@
-package com.ncbci.whoami;
+package com.ncbci.whoami.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.ncbci.whoami.R;
 
 
 public class CustomDialog implements DialogInterface.OnCancelListener, View.OnClickListener{

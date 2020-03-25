@@ -3,23 +3,14 @@ package com.ncbci.whoami.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.ncbci.whoami.LoginActivity;
-import com.ncbci.whoami.MainActivity;
 import com.ncbci.whoami.R;
 
 public class ThresholdDialog implements DialogInterface.OnCancelListener, View.OnClickListener{

@@ -3,4 +3,20 @@
     <color name="colorPrimary">#ff8000</color>
     <color name="colorPrimaryDark">#c55100</color>
     <color name="colorAccent">#ffb143</color>
+
+    <color name="theme1Primary">#ff5151</color>
+    <color name="theme1PrimaryDark">#c50b28</color>
+    <color name="theme1Accent">#ff867e</color>
+
+    <color name="theme2Primary">#ff8000</color>
+    <color name="theme2PrimaryDark">#c55100</color>
+    <color name="theme2Accent">#ffb143</color>
+
+    <color name="theme3Primary">#ffff00</color>
+    <color name="theme3PrimaryDark">#c7cc00</color>
+    <color name="theme3Accent">#ffff5a</color>
+
+    <color name="theme4Primary">#02df82</color>
+    <color name="theme4PrimaryDark">#00ac54</color>
+    <color name="theme4Accent">#64ffb2</color>
 </resources>
