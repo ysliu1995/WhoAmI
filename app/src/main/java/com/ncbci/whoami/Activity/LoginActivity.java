@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         ProgressDialog.dismiss();
                         if(task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "登入成功!!!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, "登入成功!!!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }else{

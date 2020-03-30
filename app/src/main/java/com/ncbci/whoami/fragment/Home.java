@@ -5,38 +5,52 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.lzyzsd.circleprogress.DonutProgress;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ncbci.whoami.Activity.MainActivity;
 import com.ncbci.whoami.R;
+import com.ncbci.whoami.dialog.ClassRoomDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import pl.droidsonroids.gif.GifImageView;
 
 public class Home extends Fragment {
     static final String TAG = "Home";
@@ -45,17 +59,15 @@ public class Home extends Fragment {
     private LineChart Chart;
     private DonutProgress tempChart;
     private LineDataSet dataSet;
-    private LineData data;
-    private int DataIndex = 0;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-    private Date date;
-    private Boolean issave = false;
-    private String text;
+    private int DataIndex = 0, windowSize = 30;
     private TextView temperature, humidity, CO2Label, PMLabel;
     private Switch chartSwitch;
-    private int windowSize = 30;
-    private Boolean chartFlag = false;
     private ConstraintLayout homeTopLayout;
+    private TextView level;
+    private GifImageView airStatus;
+    private ImageView airCleaner;
+    private BarChart physicalActivityChart;
+    private CardView tempCard, humCard, CO2Card, PMCard;
 
     @Nullable
     @Override
@@ -71,22 +83,7 @@ public class Home extends Fragment {
 
         initView();
         initChart();
-        // check the write permission----------------------------------------------------------------
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        123);
-            } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
-            }
-        } else {
-        }
-        // check the write permission ----------------------------------------------------------------
-
+        setListener();
         GetRealTimeData();
     }
 
@@ -99,47 +96,102 @@ public class Home extends Fragment {
         CO2Label = v.findViewById(R.id.CO2Label);
         PMLabel = v.findViewById(R.id.PMLabel);
         homeTopLayout = v.findViewById(R.id.homeTopLayout);
+        level = v.findViewById(R.id.level);
+        airStatus = v.findViewById(R.id.air_status);
+        airCleaner = v.findViewById(R.id.airCleaner);
+        physicalActivityChart = v.findViewById(R.id.physicalActivityChart);
+        tempCard = v.findViewById(R.id.tempCard);
+        humCard = v.findViewById(R.id.humCard);
+        CO2Card = v.findViewById(R.id.CO2Card);
+        PMCard = v.findViewById(R.id.PMCard);
 
         mAuth = FirebaseAuth.getInstance();
+    }
 
+    private void setListener() {
         chartSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    Chart.clearValues();
-                    initChart();
-                    chartFlag = true;
+                    Chart.setVisibility(View.INVISIBLE);
+                    physicalActivityChart.setVisibility(View.VISIBLE);
                 } else {
-                    Chart.clearValues();
-                    initChart();
-                    chartFlag = false;
+                    Chart.setVisibility(View.VISIBLE);
+                    physicalActivityChart.setVisibility(View.INVISIBLE);
                 }
+
+            }
+        });
+        airCleaner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference mdatabase = FirebaseDatabase.getInstance().getReference();
+                mdatabase.child("Users").child(mAuth.getUid()).child("airStatus").setValue(1);
+                airCleaner.setImageResource(R.drawable.air_on);
+                mdatabase.child("Users").child(mAuth.getUid()).child("command").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.d(TAG, dataSnapshot.getValue()+"");
+                        if(dataSnapshot.getValue().toString().equals("0")){
+                            airCleaner.setImageResource(R.drawable.air_off);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+        tempCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ClassRoomDialog(v.getContext()).show();
+            }
+        });
+        humCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ClassRoomDialog(getContext()).show();
+            }
+        });
+        CO2Card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ClassRoomDialog(getContext()).show();
+            }
+        });
+        PMCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ClassRoomDialog(getContext()).show();
             }
         });
     }
+
     private void changeLevelColor(int level){
         int color1, color2;
 
         switch (level){
             case 1:
-                color1 = R.color.theme1Primary;
-                color2 = R.color.theme1PrimaryDark;
+                color1 = R.color.theme4Primary;
+                color2 = R.color.theme4PrimaryDark;
+                this.level.setText("良好");
                 break;
             case 2:
                 color1 = R.color.theme2Primary;
                 color2 = R.color.theme2PrimaryDark;
+                this.level.setText("普通");
                 break;
             case 3:
-                color1 = R.color.theme3Primary;
-                color2 = R.color.theme3PrimaryDark;
-                break;
-            case 4:
-                color1 = R.color.theme4Primary;
-                color2 = R.color.theme4PrimaryDark;
-                break;
-            default:
                 color1 = R.color.theme1Primary;
                 color2 = R.color.theme1PrimaryDark;
+                this.level.setText("危險");
+                break;
+            default:
+                color1 = R.color.theme4Primary;
+                color2 = R.color.theme4PrimaryDark;
                 break;
         }
         getActivity().getWindow().setStatusBarColor(getResources().getColor(color2, null));
@@ -154,6 +206,7 @@ public class Home extends Fragment {
     }
 
     private void initChart(){
+        //initial PM2.5 chart
         ArrayList<Entry> entries = new ArrayList<>();
         entries.add(new Entry(DataIndex, 0));
 
@@ -177,39 +230,46 @@ public class Home extends Fragment {
         Chart.getAxisRight().setDrawGridLines(false);
         Chart.getXAxis().setDrawGridLines(false);
 
-        data = new LineData(dataSet);
-        Chart.setData(data);
+        LineData data1 = new LineData(dataSet);
+        Chart.setData(data1);
         Chart.invalidate();
+
+        //initial Physical Activity chart
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        for(int i=0;i<288;i++) {
+            barEntries.add(new BarEntry(i + 1, i));
+        }
+
+        physicalActivityChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        physicalActivityChart.getAxisRight().setEnabled(false);
+        physicalActivityChart.getDescription().setEnabled(false);
+        physicalActivityChart.getLegend().setEnabled(false);
+        physicalActivityChart.getAxisLeft().setDrawGridLines(false);
+        physicalActivityChart.getAxisRight().setDrawGridLines(false);
+        physicalActivityChart.getXAxis().setDrawGridLines(false);
+        physicalActivityChart.getXAxis().setLabelCount(24);
+
+        BarDataSet bardataset = new BarDataSet(barEntries, "Physical Activity");
+        bardataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        BarData data = new BarData(bardataset);
+        data.setDrawValues(false);
+        physicalActivityChart.setData(data);
+        physicalActivityChart.animateY(1000);
 
     }
 
     private void GetRealTimeData(){
         DatabaseReference mdatabase = FirebaseDatabase.getInstance().getReference();
-        mdatabase.child("Users").child(mAuth.getUid()).child("data").addValueEventListener(new ValueEventListener() {
+        mdatabase.child("Users").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                /**
-//                 *  write the record data to txt
-//                 */
-//                date = new Date();
-//                String data_str = dateFormat.format(date);
-//                text = data_str + "   :" +dataSnapshot.child("PM1").getValue().toString()+","+dataSnapshot.child("PM2dot5").getValue().toString()+","+dataSnapshot.child("PM10").getValue().toString()+","+dataSnapshot.child("CO2").getValue().toString()+","+dataSnapshot.child("temperature").getValue().toString()+","+dataSnapshot.child("humidity").getValue().toString()+"\n";
-//                // TODO write file
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if(issave){
-//                            WriteFileExample(filename,text);
-//                        }
-//                    }
-//                }).start();
                 changeLevelColor(Integer.parseInt(dataSnapshot.child("level").getValue().toString()));
-
+                changeAirStatus(Integer.parseInt(dataSnapshot.child("airStatus").getValue().toString()));
                 refreshData(
-                        Float.parseFloat(dataSnapshot.child("PM2dot5").getValue().toString()),
-                        Float.parseFloat(dataSnapshot.child("CO2").getValue().toString()),
-                        Integer.parseInt(dataSnapshot.child("temperature").getValue().toString()),
-                        Integer.parseInt(dataSnapshot.child("humidity").getValue().toString())
+                        Float.parseFloat(dataSnapshot.child("data").child("PM2dot5").getValue().toString()),
+                        Float.parseFloat(dataSnapshot.child("data").child("CO2").getValue().toString()),
+                        Integer.parseInt(dataSnapshot.child("data").child("temperature").getValue().toString()),
+                        Integer.parseInt(dataSnapshot.child("data").child("humidity").getValue().toString())
                 );
             }
 
@@ -222,60 +282,23 @@ public class Home extends Fragment {
 
     private void refreshData(float PM2dot5, float CO2, int temperature, int humidity){
         DataIndex++;
-
-        this.temperature.setText(temperature + " °C");
-        this.humidity.setText(humidity + " %");
-        this.CO2Label.setText(CO2 + " ppm");
-        this.PMLabel.setText(PM2dot5 + " μg/m3");
+        this.temperature.setText(temperature+"");
+        this.humidity.setText(humidity+"");
+        this.CO2Label.setText((int)CO2+"");
+        this.PMLabel.setText((int)PM2dot5+"");
         if(dataSet.getEntryCount() > windowSize) dataSet.removeFirst();
-        if(chartFlag){
-            dataSet.addEntry(new Entry(DataIndex, PM2dot5));
-        } else {
-            dataSet.addEntry(new Entry(DataIndex, CO2));
-        }
-
+        dataSet.addEntry(new Entry(DataIndex, PM2dot5));
         Chart.getLineData().notifyDataChanged();
         Chart.notifyDataSetChanged();
         Chart.invalidate();
     }
 
-//    private void WriteFileExample(String Filename,String message) {
-//        FileOutputStream fop = null;
-//        File file;
-//        String content = message;
-//
-//        try {
-//            File sdcard = Environment.getExternalStorageDirectory();
-//            file = new File(sdcard,"Log-"+Filename+".txt");
-//            Log.i("Write File:", file + "");
-//            fop = new FileOutputStream(file, true);
-//
-//            if (!file.exists()) {
-//                file.createNewFile();
-//            }
-//
-//            byte[] contentInBytes = content.getBytes();
-//
-//            fop.write(contentInBytes);
-//            fop.flush();
-//            fop.close();
-//            //Looper.prepare();
-//            //Toast.makeText(MainActivity.this, "Save Success, Path:" + file, Toast.LENGTH_SHORT).show();
-//            //Looper.loop();
-//
-//        } catch (IOException e) {
-//            Log.i("Write E:", e + "");
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if (fop != null) {
-//                    fop.close();
-//                }
-//            } catch (IOException e) {
-//                Log.i("Write IOException", e + "");
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
+    private void changeAirStatus(int status){
+        Log.d(TAG, status + "");
+        if(status == 1) {
+            airStatus.setImageResource(R.drawable.air_clean_on);
+        } else {
+            airStatus.setImageResource(R.drawable.air_clean_off);
+        }
+    }
 }

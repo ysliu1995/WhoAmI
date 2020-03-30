@@ -12,13 +12,12 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.ncbci.whoami.Adapter.BottomAdapter;
 import com.ncbci.whoami.R;
-import com.ncbci.whoami.dialog.ThresholdDialog;
+import com.ncbci.whoami.dialog.ClassRoomDialog;
 import com.ncbci.whoami.fragment.Bluetooth;
 import com.ncbci.whoami.fragment.Home;
 import com.ncbci.whoami.fragment.Stream;
@@ -39,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
-        toolbar.inflateMenu(R.menu.nav_menu);
+//        toolbar.inflateMenu(R.menu.nav_menu);
         getSupportActionBar().setTitle("");
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                new ThresholdDialog(MainActivity.this).show();
+                new ClassRoomDialog(MainActivity.this).show();
                 return true;
             }
         });
@@ -62,11 +61,11 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 int id = menuItem.getItemId();
                 if (id == R.id.action_ble_setting) {
-                    Toast.makeText(MainActivity.this, "裝置設定", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, DeviceSettingActivity.class));
                     return true;
                 }
                 else if (id == R.id.action_threshold) {
-                    Toast.makeText(MainActivity.this, "閥值設定", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, AirControllActivity.class));
                     return true;
                 }
                 return false;

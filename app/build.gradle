@@ -44,5 +44,6 @@ dependencies {
     api 'com.github.tcking:giraffeplayer2:0.1.25-full'
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 
 }
