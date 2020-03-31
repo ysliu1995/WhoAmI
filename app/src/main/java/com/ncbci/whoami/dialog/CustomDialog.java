@@ -33,7 +33,6 @@ public class CustomDialog implements DialogInterface.OnCancelListener, View.OnCl
         // 點邊取消
         mDialog.setCancelable(true);
         mDialog.setCanceledOnTouchOutside(true);
-        getwifi = mDialog.findViewById(R.id.SSID);
         conf = mDialog.findViewById(R.id.configure);
         all_wifi = mDialog.findViewById(R.id.all_wifi);
         passwd = mDialog.findViewById(R.id.password);

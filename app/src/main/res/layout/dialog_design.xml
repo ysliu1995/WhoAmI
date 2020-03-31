@@ -5,46 +5,53 @@ android:layout_width="wrap_content"
 android:layout_height="wrap_content"
     android:gravity="center">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:id="@+id/all_wifi"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp"/>
-        <Button
-            android:id="@+id/SSID"
-            android:layout_width="wrap_content"
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="337dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="請設定您裝置的WIFI"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/all_wifi"
+            android:layout_weight="1"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="4dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp"
-            android:text="List Wifi" />
+            android:layout_marginBottom="4dp" />
     </LinearLayout>
-<EditText
-    android:id="@+id/password"
-    android:inputType="textPassword"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="4dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
-    android:layout_marginBottom="16dp"
-    android:fontFamily="sans-serif"
-    android:hint="@string/password"/>
-    <Button
-        android:id="@+id/configure"
+
+    <EditText
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:hint="wifi密碼"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/configure"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:text="Configure" />
+        android:background="@drawable/round_button"
+        android:shadowRadius="5"
+        android:text="設定完成"
+        android:textColor="#ffffff" />
 </LinearLayout>

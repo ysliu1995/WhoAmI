@@ -23,7 +23,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +65,8 @@ public class Bluetooth extends Fragment {
     private HashSet<String> h_adapter;
     private FirebaseAuth mAuth;
     int size;
+    private ImageView okImage;
+    private ProgressBar bleProgress;
     /**
      * Tag for Log
      */
@@ -102,6 +105,13 @@ public class Bluetooth extends Fragment {
         if (mChatService == null) {
             setupChat();
         }
+
+        bleProgress = v.findViewById(R.id.ble_progress);
+        okImage = v.findViewById(R.id.okImage);
+
+
+
+
         h_adapter = new HashSet<String>();
         mAuth = FirebaseAuth.getInstance();
         // check the location permission----------------------------------------------------------------
@@ -240,7 +250,7 @@ public class Bluetooth extends Fragment {
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.dialog_design);
-                dialog_btn1 = (Button) dialog.findViewById(R.id.SSID);
+//                dialog_btn1 = (Button) dialog.findViewById(R.id.SSID);
                 dialog_btn2 = (Button) dialog.findViewById(R.id.configure);
                 dialog_spinner = (Spinner) dialog.findViewById(R.id.all_wifi);
                 dialog_password = (EditText) dialog.findViewById(R.id.password);
@@ -265,39 +275,42 @@ public class Bluetooth extends Fragment {
                 dialog_btn2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getActivity(),"send SSID : " + dialog_spinner.getSelectedItem().toString() + " PW: " + dialog_password.getText().toString(),Toast.LENGTH_SHORT).show();
-                        sendMessage(dialog_spinner.getSelectedItem().toString(),dialog_password.getText().toString(),mAuth.getUid());
+//                        Toast.makeText(getActivity(),"send SSID : " + dialog_spinner.getSelectedItem().toString() + " PW: " + dialog_password.getText().toString(),Toast.LENGTH_SHORT).show();
+//                        sendMessage(dialog_spinner.getSelectedItem().toString(),dialog_password.getText().toString(),mAuth.getUid());
+                        getActivity().recreate();
                     }
                 });
                 dialog.show();
             }
         });
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkLocationPermission();
-                if (!mBtAdapter.isEnabled()) {
-                    mBtAdapter.enable();
-                }
-                // Initialize array adapters. One for already paired devices and
-                // one for newly discovered devices
-                doDiscovery();
-            }
-        });
+//        scanButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                checkLocationPermission();
+//                if (!mBtAdapter.isEnabled()) {
+//                    mBtAdapter.enable();
+//                }
+//                // Initialize array adapters. One for already paired devices and
+//                // one for newly discovered devices
+//                doDiscovery();
+//            }
+//        });
+
+
 
         ArrayAdapter<String> pairedDevicesArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
         mNewDevicesArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.device_name);
 
 
-        // Find and set up the ListView for paired devices
-        ListView pairedListView =  v.findViewById(R.id.all_device);
-        pairedListView.setAdapter(pairedDevicesArrayAdapter);
-        pairedListView.setOnItemClickListener(mDeviceClickListener);
-
-        // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = v.findViewById(R.id.all_device2);
-        newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
-        newDevicesListView.setOnItemClickListener(mDeviceClickListener);
+//        // Find and set up the ListView for paired devices
+//        ListView pairedListView =  v.findViewById(R.id.all_device);
+//        pairedListView.setAdapter(pairedDevicesArrayAdapter);
+//        pairedListView.setOnItemClickListener(mDeviceClickListener);
+//
+//        // Find and set up the ListView for newly discovered devices
+//        ListView newDevicesListView = v.findViewById(R.id.all_device2);
+//        newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
+//        newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
 
         // Register for broadcasts when a device is discovered
@@ -317,19 +330,81 @@ public class Bluetooth extends Fragment {
             mBtAdapter.enable();
         }
 
+        checkLocationPermission();
+        if (!mBtAdapter.isEnabled()) {
+            mBtAdapter.enable();
+        }
+        // Initialize array adapters. One for already paired devices and
+        // one for newly discovered devices
+        doDiscovery();
+//
         // Get a set of currently paired devices
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
 
         // If there are paired devices, add each one to the ArrayAdapter
         if (pairedDevices.size() > 0) {
-            v.findViewById(R.id.paired_device).setVisibility(View.VISIBLE);
+//            v.findViewById(R.id.paired_device).setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices) {
+//                Log.d(TAG, device.getName() + "\n" + device.getAddress());
                 pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
             }
         } else {
             String noDevices = getResources().getText(R.string.none_paired).toString();
             pairedDevicesArrayAdapter.add(noDevices);
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.dialog_design);
+//                dialog_btn1 = (Button) dialog.findViewById(R.id.SSID);
+                dialog_btn2 = dialog.findViewById(R.id.configure);
+                dialog_spinner = (Spinner) dialog.findViewById(R.id.all_wifi);
+                dialog_password = (EditText) dialog.findViewById(R.id.password);
+//                dialog_btn1.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        if(!wifi.isWifiEnabled()){
+//                            wifi.setWifiEnabled(true);
+//                        }
+//                        wifi.startScan();
+//                        // get all avaliable wifi ssid
+//                        wifis = new ArrayList<String>();
+//                        wifilist = scanSuccess();
+//                        for(int i = 0; i < wifilist.size(); i++){
+//                            wifis.add(((wifilist.get(i).SSID)));
+//                        }
+//                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, wifis);
+//                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                        dialog_spinner.setAdapter(adapter);
+//                    }
+//                });
+                if(!wifi.isWifiEnabled()){
+                    wifi.setWifiEnabled(true);
+                }
+                wifi.startScan();
+                // get all avaliable wifi ssid
+                wifis = new ArrayList<String>();
+                wifilist = scanSuccess();
+                for(int i = 0; i < wifilist.size(); i++){
+                    wifis.add(((wifilist.get(i).SSID)));
+                }
+                adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, wifis);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                dialog_spinner.setAdapter(adapter);
+                dialog_btn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+//                        Toast.makeText(getActivity(),"send SSID : " + dialog_spinner.getSelectedItem().toString() + " PW: " + dialog_password.getText().toString(),Toast.LENGTH_SHORT).show();
+//                        sendMessage(dialog_spinner.getSelectedItem().toString(),dialog_password.getText().toString(),mAuth.getUid());
+//                        Toast.makeText(getActivity(), "設定成功！！！", Toast.LENGTH_SHORT).show();
+                        getActivity().recreate();
+                    }
+                });
+                dialog.show();
+            }
+        }, 5000);
     }
 
     List<ScanResult> scanSuccess(){
@@ -401,7 +476,7 @@ public class Bluetooth extends Fragment {
         //getActivity().setTitle(R.string.scanning);
 
         // Turn on sub-title for new devices
-        v.findViewById(R.id.avaliable_device).setVisibility(View.VISIBLE);
+//        v.findViewById(R.id.avaliable_device).setVisibility(View.VISIBLE);
 
         // If we're already discovering, stop it
         if (mBtAdapter.isDiscovering()) {
@@ -453,6 +528,8 @@ public class Bluetooth extends Fragment {
                         case BluetoothChatService.STATE_CONNECTED:
                             //setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
                             //mConversationArrayAdapter.clear();
+                            bleProgress.setVisibility(View.INVISIBLE);
+                            okImage.setVisibility(View.VISIBLE);
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
                             //setStatus(R.string.title_connecting);

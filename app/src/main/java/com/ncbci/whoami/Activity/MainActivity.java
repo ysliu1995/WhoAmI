@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, DeviceSettingActivity.class));
                     return true;
                 }
-                else if (id == R.id.action_threshold) {
-                    startActivity(new Intent(MainActivity.this, AirControllActivity.class));
-                    return true;
-                }
+//                else if (id == R.id.action_threshold) {
+//                    startActivity(new Intent(MainActivity.this, AirControllActivity.class));
+//                    return true;
+//                }
                 return false;
             }
         });
@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
                         mVp.setCurrentItem(1);
                         return true;
 
-                    case R.id.navigation_bluetooth:
-                        mVp.setCurrentItem(2);
-                        return true;
+//                    case R.id.navigation_bluetooth:
+//                        mVp.setCurrentItem(2);
+//                        return true;
                 }
                 return false;
             }
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         BottomAdapter adapter = new BottomAdapter(getSupportFragmentManager());
         adapter.addFragment(new Home());
         adapter.addFragment(new Stream());
-        adapter.addFragment(new Bluetooth());
+//        adapter.addFragment(new Bluetooth());
         viewPager.setAdapter(adapter);
     }
 

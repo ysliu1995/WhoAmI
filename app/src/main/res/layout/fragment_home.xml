@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="CO2"
+            android:text="PM2.5"
             app:layout_constraintBottom_toBottomOf="@+id/switch2"
             app:layout_constraintEnd_toStartOf="@+id/switch2"
             app:layout_constraintTop_toTopOf="@+id/switch2" />
@@ -254,7 +254,6 @@
             android:id="@+id/homeTopLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/colorPrimary"
             android:elevation="5dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline11"
             app:layout_constraintEnd_toEndOf="parent"
@@ -272,12 +271,12 @@
 
             <com.github.lzyzsd.circleprogress.DonutProgress
                 android:id="@+id/tempChart"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
                 android:layout_marginBottom="32dp"
                 android:background="#00FFFFFF"
                 app:donut_background_color="#ffffff"
-                app:donut_finished_color="#FF9800"
+                app:donut_finished_color="#ffffff"
                 app:donut_prefix_text="良好"
                 app:donut_progress="100"
                 app:donut_text_color="#ffffff"
@@ -288,36 +287,32 @@
 
             <pl.droidsonroids.gif.GifImageView
                 android:id="@+id/air_status"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
                 android:layout_marginBottom="8dp"
-                android:src="@drawable/air_clean_on"
+                android:src="@drawable/air_clean_off"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tempChart" />
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/speak"
+                android:layout_width="120dp"
+                android:layout_height="0dp"
+                android:src="@drawable/diagv2"
+                app:layout_constraintBottom_toTopOf="@+id/air_status"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline18"
-                app:layout_constraintTop_toBottomOf="@+id/airCleaner" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
+                android:textSize="40sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/tempChart"
                 app:layout_constraintEnd_toEndOf="@+id/tempChart"
                 app:layout_constraintStart_toStartOf="@+id/tempChart"
                 app:layout_constraintTop_toTopOf="@+id/tempChart" />
-
-            <ImageView
-                android:id="@+id/airCleaner"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/air_off"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline18"
-                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.Guideline

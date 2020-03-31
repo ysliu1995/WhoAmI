@@ -25,7 +25,7 @@
         android:layout_marginBottom="10dp"
         android:gravity="center"
         android:text="載入中..."
-        android:textColor="#a8adad"
+        android:textColor="#FFFFFF"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

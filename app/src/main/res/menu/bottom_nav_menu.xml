@@ -4,13 +4,13 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
+        android:title="首頁" />
     <item
         android:id="@+id/navigation_stream"
         android:icon="@drawable/outline_live_tv_black_24dp"
-        android:title="@string/title_stream" />
-    <item
-        android:id="@+id/navigation_bluetooth"
-        android:icon="@drawable/baseline_settings_bluetooth_black_24dp"
-        android:title="@string/title_bluetooth"/>
+        android:title="即時監看" />
+<!--    <item-->
+<!--        android:id="@+id/navigation_bluetooth"-->
+<!--        android:icon="@drawable/baseline_settings_bluetooth_black_24dp"-->
+<!--        android:title="裝置設定"/>-->
 </menu>

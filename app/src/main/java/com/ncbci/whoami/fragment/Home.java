@@ -42,9 +42,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.ncbci.whoami.Activity.LoginActivity;
 import com.ncbci.whoami.Activity.MainActivity;
+import com.ncbci.whoami.CustomBarChartRender;
 import com.ncbci.whoami.R;
 import com.ncbci.whoami.dialog.ClassRoomDialog;
+import com.ncbci.whoami.dialog.ProgressDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,9 +67,9 @@ public class Home extends Fragment {
     private Switch chartSwitch;
     private ConstraintLayout homeTopLayout;
     private TextView level;
-    private GifImageView airStatus;
-    private ImageView airCleaner;
+    private GifImageView airStatus, speak;
     private BarChart physicalActivityChart;
+    private BarDataSet bardataset;
     private CardView tempCard, humCard, CO2Card, PMCard;
 
     @Nullable
@@ -98,7 +101,7 @@ public class Home extends Fragment {
         homeTopLayout = v.findViewById(R.id.homeTopLayout);
         level = v.findViewById(R.id.level);
         airStatus = v.findViewById(R.id.air_status);
-        airCleaner = v.findViewById(R.id.airCleaner);
+        speak = v.findViewById(R.id.speak);
         physicalActivityChart = v.findViewById(R.id.physicalActivityChart);
         tempCard = v.findViewById(R.id.tempCard);
         humCard = v.findViewById(R.id.humCard);
@@ -115,6 +118,7 @@ public class Home extends Fragment {
                 if(isChecked){
                     Chart.setVisibility(View.INVISIBLE);
                     physicalActivityChart.setVisibility(View.VISIBLE);
+                    physicalActivityChart.animateY(1000);
                 } else {
                     Chart.setVisibility(View.VISIBLE);
                     physicalActivityChart.setVisibility(View.INVISIBLE);
@@ -122,18 +126,21 @@ public class Home extends Fragment {
 
             }
         });
-        airCleaner.setOnClickListener(new View.OnClickListener() {
+        airStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                speak.setImageResource(R.drawable.cleanv2);
+                airStatus.setImageResource(R.drawable.air_clean_on);
                 DatabaseReference mdatabase = FirebaseDatabase.getInstance().getReference();
                 mdatabase.child("Users").child(mAuth.getUid()).child("airStatus").setValue(1);
-                airCleaner.setImageResource(R.drawable.air_on);
-                mdatabase.child("Users").child(mAuth.getUid()).child("command").addValueEventListener(new ValueEventListener() {
+                mdatabase.child("Users").child(mAuth.getUid()).child("airStatus").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Log.d(TAG, dataSnapshot.getValue()+"");
-                        if(dataSnapshot.getValue().toString().equals("0")){
-                            airCleaner.setImageResource(R.drawable.air_off);
+                        if(dataSnapshot.getValue().toString().equals("1")){
+
+                        } else{
+                            speak.setImageResource(R.drawable.diagv2);
+                            airStatus.setImageResource(R.drawable.air_clean_off);
                         }
                     }
 
@@ -203,6 +210,8 @@ public class Home extends Fragment {
         dataSet.setColor(ContextCompat.getColor(v.getContext(), color1));
         dataSet.setFillColor(ContextCompat.getColor(v.getContext(), color1));
         dataSet.setValueTextColor(ContextCompat.getColor(v.getContext(), color2));
+        bardataset.setColor(ContextCompat.getColor(v.getContext(), color1));
+//        bardataset.setValueTextColor(ContextCompat.getColor(v.getContext(), color2));
     }
 
     private void initChart(){
@@ -235,26 +244,34 @@ public class Home extends Fragment {
         Chart.invalidate();
 
         //initial Physical Activity chart
+        int[] fakeData = {15, 17, 16, 14, 12, 18, 16, 5, 7, 3, 8, 2, 4, 9, 6, 11, 10, 4, 0, 0, 0, 0, 0, 0};
         ArrayList<BarEntry> barEntries = new ArrayList<>();
-        for(int i=0;i<288;i++) {
-            barEntries.add(new BarEntry(i + 1, i));
+        for(int i=0;i<24;i++) {
+            barEntries.add(new BarEntry(i, fakeData[i]));
         }
+
 
         physicalActivityChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         physicalActivityChart.getAxisRight().setEnabled(false);
         physicalActivityChart.getDescription().setEnabled(false);
         physicalActivityChart.getLegend().setEnabled(false);
         physicalActivityChart.getAxisLeft().setDrawGridLines(false);
+        physicalActivityChart.getAxisLeft().setDrawLabels(false);
         physicalActivityChart.getAxisRight().setDrawGridLines(false);
         physicalActivityChart.getXAxis().setDrawGridLines(false);
         physicalActivityChart.getXAxis().setLabelCount(24);
+        physicalActivityChart.getAxisLeft().setAxisMinimum(0);
 
-        BarDataSet bardataset = new BarDataSet(barEntries, "Physical Activity");
-        bardataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        bardataset = new BarDataSet(barEntries, "Physical Activity");
+        bardataset.setColor(ContextCompat.getColor(v.getContext(), R.color.colorPrimary));
         BarData data = new BarData(bardataset);
         data.setDrawValues(false);
         physicalActivityChart.setData(data);
         physicalActivityChart.animateY(1000);
+
+        CustomBarChartRender barChartRender = new CustomBarChartRender(physicalActivityChart,physicalActivityChart.getAnimator(),physicalActivityChart.getViewPortHandler());
+        barChartRender.setRadius(10);
+        physicalActivityChart.setRenderer(barChartRender);
 
     }
 

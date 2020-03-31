@@ -5,13 +5,9 @@
         <item
             android:id="@+id/action_ble_setting"
             android:checked="true"
-            android:icon="@drawable/rain"
-            android:title="裝置配對" />
+            android:icon="@drawable/bluetooth"
+            android:title="裝置連線" />
 
-        <item
-            android:id="@+id/action_threshold"
-            android:icon="@drawable/rain"
-            android:title="空氣清淨機設定" />
     </group>
 
 </menu>
