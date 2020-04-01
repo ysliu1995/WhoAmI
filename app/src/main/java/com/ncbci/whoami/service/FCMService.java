@@ -91,7 +91,7 @@ public class FCMService extends FirebaseMessagingService {
         notificationbuilder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.icon)
                 .setContentTitle(body)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);

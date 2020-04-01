@@ -126,6 +126,7 @@ public class DeviceSettingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(view.getContext(), "設定成功！！！", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(DeviceSettingActivity.this, MainActivity.class));
                         finish();
                     }
                 });

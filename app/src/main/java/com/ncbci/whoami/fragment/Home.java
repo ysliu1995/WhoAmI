@@ -217,7 +217,7 @@ public class Home extends Fragment {
     private void initChart(){
         //initial PM2.5 chart
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(DataIndex, 0));
+        entries.add(new Entry(DataIndex, 15));
 
         dataSet = new LineDataSet(entries, "CO2");
         dataSet.setColor(ContextCompat.getColor(v.getContext(), R.color.colorPrimary));
@@ -285,8 +285,8 @@ public class Home extends Fragment {
                 refreshData(
                         Float.parseFloat(dataSnapshot.child("data").child("PM2dot5").getValue().toString()),
                         Float.parseFloat(dataSnapshot.child("data").child("CO2").getValue().toString()),
-                        Integer.parseInt(dataSnapshot.child("data").child("temperature").getValue().toString()),
-                        Integer.parseInt(dataSnapshot.child("data").child("humidity").getValue().toString())
+                        Integer.parseInt(dataSnapshot.child("data2").child("temperature").getValue().toString()),
+                        Integer.parseInt(dataSnapshot.child("data2").child("humidity").getValue().toString())
                 );
             }
 
@@ -314,8 +314,10 @@ public class Home extends Fragment {
         Log.d(TAG, status + "");
         if(status == 1) {
             airStatus.setImageResource(R.drawable.air_clean_on);
+            speak.setImageResource(R.drawable.cleanv2);
         } else {
             airStatus.setImageResource(R.drawable.air_clean_off);
+            speak.setImageResource(R.drawable.diagv2);
         }
     }
 }
